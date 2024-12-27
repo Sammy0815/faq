@@ -1,48 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
+import { questions } from "./Components/questions.js";
 
 import "./App.css";
-import Logo from "./Components/Logo";
-import Form from "./Components/Form";
-import PackingList from "./Components/PackingList";
-import Stats from "./Components/Stats";
-import { useState } from "react";
 
 export default function App() {
-  const [submittedData, setSubmittedData] = useState([]);
+  const [selectedId, setSelectedId] = useState(null);
 
-  function handleDelete(id) {
-    console.log(id);
-
-    const filteredData = submittedData.filter((item) => item.id !== id);
-    setSubmittedData(filteredData);
-  }
-
-  // function handlePacked(id) {
-  //   setSubmittedData((submittedData) =>
-  //     submittedData.map((item) =>
-  //       item.id === id ? { ...submittedData, packed: !item.packed } : item
-  //     )
-  //   );
-  // }
-  function handlePacked(id) {
-    // setSubmittedData((submittedData) =>
-    const newSubmitedData = submittedData.map((item) =>
-      item.id === id ? { ...item, packed: !item.packed } : item
-    );
-    setSubmittedData(newSubmitedData);
+  function handleSelected(id) {
+    if (selectedId === id) {
+      setSelectedId(null);
+    } else {
+      setSelectedId(id);
+    }
   }
 
   return (
-    <div className="main-container flex flex-col justify-center ">
-      <Logo />
-      <Form setSubmittedData={setSubmittedData} />
-      <PackingList
-        submittedData={submittedData}
-        // setSubmittedData={setSubmittedData}
-        handleDelete={handleDelete}
-        handlePacked={handlePacked}
-      />
-      <Stats />
-    </div>
+    <>
+      <h2 className="text-2xl text-center font-bold">FLASHCARDS</h2>
+      <div className="flex flex-wrap justify-center items-center h-screen w-[800px] gap-5">
+        {questions.map((item) => (
+          <div
+            key={item.id}
+            className={`w-[350px] h-[200px] p-5 ${
+              item.id === selectedId
+                ? "bg-red-700 text-white"
+                : "bg-gray-200 text-red-500"
+            } rounded-lg shadow-md cursor-pointer flex justify-center items-center  text-center`}
+            onClick={() => handleSelected(item.id)}
+          >
+            {item.id === selectedId ? item.answer : item.question}
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
