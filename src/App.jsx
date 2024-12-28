@@ -1,37 +1,53 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from "react";
-import { questions } from "./Components/questions.js";
+import { faqs } from "./Components/questions.js";
 
 import "./App.css";
 
 export default function App() {
-  const [selectedId, setSelectedId] = useState(null);
-
-  function handleSelected(id) {
-    if (selectedId === id) {
-      setSelectedId(null);
-    } else {
-      setSelectedId(id);
-    }
+  const [selectedItem, setSelectedItem] = useState(null);
+  let number = 0;
+  function handleToggle(id) {
+    setSelectedItem(selectedItem === id ? null : id);
   }
 
   return (
-    <>
-      <h2 className="text-2xl text-center font-bold">FLASHCARDS</h2>
-      <div className="flex flex-wrap justify-center items-center h-screen w-[800px] gap-5">
-        {questions.map((item) => (
+    <div className="flex flex-col justify-center items-center py-6 gap-2">
+      <h2 className="text-xl font-bold">React Frequently Asked Questions</h2>
+      {faqs.map((faq) => (
+        <div
+          key={faq.id}
+          className="accordion-wrapper w-[550px] bg-white rounded-md shadow-md"
+        >
+          {/* According Header */}
           <div
-            key={item.id}
-            className={`w-[350px] h-[200px] p-5 ${
-              item.id === selectedId
-                ? "bg-red-700 text-white"
-                : "bg-gray-200 text-red-500"
-            } rounded-lg shadow-md cursor-pointer flex justify-center items-center  text-center`}
-            onClick={() => handleSelected(item.id)}
+            className={`accordion-header p-4 flex text-md font-semibold cursor-pointer ${
+              faq.id === selectedItem
+                ? "text-green-600 border-t-4 border-green-600"
+                : ""
+            }`}
+            onClick={() => handleToggle(faq.id)}
           >
-            {item.id === selectedId ? item.answer : item.question}
+            <span
+              className={
+                faq.id === selectedItem ? "text-green-600" : "text-gray-400"
+              }
+            >
+              0{(number += 1)}
+            </span>
+            <h2 className="w-[450px] ml-3">{faq.question}</h2>
+            <span>{faq.id === selectedItem ? "-" : "+"}</span>
           </div>
-        ))}
-      </div>
-    </>
+          <div
+            // According Details
+            className={`accordion-details bg-gray-100 p-4 min-h-[100px] ${
+              faq.id === selectedItem ? "block" : "hidden"
+            }`}
+          >
+            <p className="ml-7 text-sm w-[450px]">{faq.answer}</p>
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }
